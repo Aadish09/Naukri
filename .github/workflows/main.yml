@@ -37,6 +37,11 @@ jobs:
           echo "USERNAME = '${{ secrets.EMAIL }}'" > constants.py
           echo "PASSWORD = '${{ secrets.PASSWORD }}'" >> constants.py
           echo "MOBILE = '${{ secrets.MOBILE }}'" >> constants.py
+          echo "ORIGINAL_RESUME_PATH = 'Aadish_SDE2_Backend_2025.pdf'" >> constants.py
+          echo "MODIFIED_RESUME_PATH = 'Aadish_SDE2_Backend_2025.pdf'" >> constants.py
+          echo "NAUKRI_LOGIN_URL = 'https://www.naukri.com/nlogin/login'" >> constants.py
+          echo "NAUKRI_PROFILE_URL = 'https://www.naukri.com/mnjuser/profile'" >> constants.py
+
 
       - name: Run script
         run: xvfb-run python naukri.py
