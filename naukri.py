@@ -155,34 +155,35 @@ def randomText():
     return "".join(choice(ascii_uppercase + digits) for _ in range(randint(1, 5)))
 
 
-def LoadNaukri(headless):
-    """Open Chrome to load Naukri.com"""
-
+def LoadNaukri(headless=True):
     options = webdriver.ChromeOptions()
+    
+    # ✅ Essential flags for GitHub Actions compatibility
+    options.add_argument("--no-sandbox")
+    options.add_argument("--disable-dev-shm-usage")
     options.add_argument("--disable-notifications")
-    options.add_argument("--start-maximized")  # ("--kiosk") for MAC
-    options.add_argument("--disable-popups")
     options.add_argument("--disable-gpu")
-    unique_profile_dir = f"/tmp/chrome-profile-{uuid.uuid4()}"
-    options.add_argument(f"--user-data-dir={unique_profile_dir}")
-    print(f"--user-data-dir={unique_profile_dir}")
-    if headless:
-        options.add_argument("--disable-dev-shm-usage")
-        options.add_argument("headless")
+    options.add_argument("--disable-software-rasterizer")
 
-    # updated to use latest selenium Chrome service
-    driver = None
+    # ✅ Do NOT use --user-data-dir in CI
+    # Commenting this line — even if unique, it causes problems in CI environments
+    # options.add_argument(f"--user-data-dir=/tmp/chrome-profile-{uuid.uuid4()}")
+
+    # ✅ Headless mode must use "new" flag for modern Chrome
+    if headless:
+        options.add_argument("--headless=new")
+
+    # Launch
     try:
         driver = webdriver.Chrome(options=options, service=ChromeService())
     except Exception as e:
         print(f"Error launching Chrome: {e}")
-        driver = webdriver.Chrome(options)
-    log_msg("Google Chrome Launched!")
+        raise
 
-    driver.implicitly_wait(5)
-    driver.get(NaukriURL)
+    print("✅ Chrome launched")
+    driver.implicitly_wait(10)
+    driver.get("https://www.naukri.com/nlogin/login")  # Or constants.NAUKRI_LOGIN_URL
     return driver
-
 
 def naukriLogin(headless=False):
     """Open Chrome browser and Login to Naukri.com"""
