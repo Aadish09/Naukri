@@ -2,7 +2,7 @@ name: Naukri Daily Auto Update
 
 on:
   schedule:
-    - cron: '0 3 * * *'  # Runs at 8:30 AM IST
+    - cron: '0 3 * * *'  # 8:30 AM IST
   workflow_dispatch:
 
 jobs:
@@ -18,10 +18,10 @@ jobs:
         with:
           python-version: '3.10'
 
-      - name: Install system dependencies
+      - name: Install Chrome and dependencies
         run: |
           sudo apt-get update
-          sudo apt-get install -y wget unzip xvfb libxi6 libgconf-2-4 default-jdk libnss3 libxss1 libappindicator1 libindicator7
+          sudo apt-get install -y wget unzip xvfb libxi6 libnss3 libxss1 libatk-bridge2.0-0 libgtk-3-0 libgbm-dev
           wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
           sudo dpkg -i google-chrome-stable_current_amd64.deb || sudo apt-get -f install -y
           wget -N https://chromedriver.storage.googleapis.com/$(curl -sS https://chromedriver.storage.googleapis.com/LATEST_RELEASE)/chromedriver_linux64.zip
@@ -32,13 +32,11 @@ jobs:
       - name: Install Python dependencies
         run: pip install -r requirements.txt
 
-      - name: Inject constants.py from secrets
+      - name: Create constants.py from secrets
         run: |
           echo "USERNAME = '${{ secrets.EMAIL }}'" > constants.py
           echo "PASSWORD = '${{ secrets.PASSWORD }}'" >> constants.py
           echo "MOBILE = '${{ secrets.MOBILE }}'" >> constants.py
 
-      - name: Run script with headless display
-        run: |
-          chmod +x naukri.py
-          xvfb-run python naukri.py
+      - name: Run script
+        run: xvfb-run python naukri.py
