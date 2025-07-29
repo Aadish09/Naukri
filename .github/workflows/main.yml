@@ -18,20 +18,18 @@ jobs:
         with:
           python-version: '3.10'
 
-      - name: Install Chrome v138 and dependencies
+      - name: Install Chrome and ChromeDriver
         run: |
           sudo apt-get update
           sudo apt-get install -y wget unzip xvfb libxi6 libnss3 libxss1 libatk-bridge2.0-0 libgtk-3-0 libgbm-dev
-          
           wget https://storage.googleapis.com/chrome-for-testing-public/138.0.7204.168/linux64/chrome-linux64.zip
           unzip chrome-linux64.zip
           sudo mv chrome-linux64 /opt/chrome
-          sudo ln -sf /opt/chrome/chrome /usr/bin/google-chrome
-
+          sudo ln -s /opt/chrome/chrome /usr/bin/google-chrome
           wget https://storage.googleapis.com/chrome-for-testing-public/138.0.7204.168/linux64/chromedriver-linux64.zip
           unzip chromedriver-linux64.zip
-          sudo mv chromedriver-linux64/chromedriver /usr/local/bin/chromedriver
-          sudo chmod +x /usr/local/bin/chromedriver
+          sudo mv chromedriver-linux64/chromedriver /usr/bin/chromedriver
+          sudo chmod +x /usr/bin/chromedriver
 
       - name: Install Python dependencies
         run: pip install -r requirements.txt
