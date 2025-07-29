@@ -22,6 +22,7 @@ from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.chrome.service import Service as ChromeService
 import constants
+import uuid
 
 # Add folder Path of your resume
 originalResumePath = constants.ORIGINAL_RESUME_PATH
@@ -162,7 +163,8 @@ def LoadNaukri(headless):
     options.add_argument("--start-maximized")  # ("--kiosk") for MAC
     options.add_argument("--disable-popups")
     options.add_argument("--disable-gpu")
-    options.add_argument("--user-data-dir=/tmp/chrome-profile")
+    unique_profile_dir = f"/tmp/chrome-profile-{uuid.uuid4()}"
+    options.add_argument(f"--user-data-dir={unique_profile_dir}")
     if headless:
         options.add_argument("--disable-dev-shm-usage")
         options.add_argument("headless")
