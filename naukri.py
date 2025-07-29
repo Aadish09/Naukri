@@ -165,6 +165,7 @@ def LoadNaukri(headless):
     options.add_argument("--disable-gpu")
     unique_profile_dir = f"/tmp/chrome-profile-{uuid.uuid4()}"
     options.add_argument(f"--user-data-dir={unique_profile_dir}")
+    print(f"--user-data-dir={unique_profile_dir}")
     if headless:
         options.add_argument("--disable-dev-shm-usage")
         options.add_argument("headless")
