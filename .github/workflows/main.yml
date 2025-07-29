@@ -1,52 +1,44 @@
-# GitHub Actions Workflow for navchandar/Naukri repo
-# File location: .github/workflows/naukri-daily-update.yml
-
 name: Naukri Daily Auto Update
 
 on:
   schedule:
-    - cron: '0 3 * * *'  # Runs daily at 8:30 AM IST
+    - cron: '0 3 * * *'  # Runs at 8:30 AM IST
   workflow_dispatch:
 
 jobs:
   update-naukri-profile:
-    runs-on: ubuntu-latesdt
-    defaults:
-      run:
-        shell: bash
+    runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout repo
+      - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Set up Python 3.x
+      - name: Set up Python
         uses: actions/setup-python@v4
         with:
-          python-version: '3.x'
+          python-version: '3.10'
 
-      - name: Install dependencies
+      - name: Install system dependencies
         run: |
           sudo apt-get update
-          sudo apt-get install -y wget unzip xvfb libxi6 libgconf-2-4
+          sudo apt-get install -y wget unzip xvfb libxi6 libgconf-2-4 default-jdk libnss3 libxss1 libappindicator1 libindicator7
           wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
           sudo dpkg -i google-chrome-stable_current_amd64.deb || sudo apt-get -f install -y
           wget -N https://chromedriver.storage.googleapis.com/$(curl -sS https://chromedriver.storage.googleapis.com/LATEST_RELEASE)/chromedriver_linux64.zip
           unzip chromedriver_linux64.zip
           sudo mv -f chromedriver /usr/local/bin/chromedriver
           sudo chmod +x /usr/local/bin/chromedriver
-          pip install -r requirements.txt
 
-      - name: Run Naukri updater
-        env:
-          USERNAME: ${{ secrets.EMAIL }}
-          PASSWORD: ${{ secrets.PASSWORD }}
-          MOBILE: ${{ secrets.MOBILE }}
+      - name: Install Python dependencies
+        run: pip install -r requirements.txt
+
+      - name: Inject constants.py from secrets
         run: |
-          echo "ORIGINAL_RESUME_PATH = 'Aadish_SDE2_Backend_2025.pdf'" > constants.py
-          echo "MODIFIED_RESUME_PATH = 'Aadish_SDE2_Backend_2025.pdf'" >> constants.py
-          echo "USERNAME = '${{ secrets.EMAIL }}'" >> constants.py
+          echo "USERNAME = '${{ secrets.EMAIL }}'" > constants.py
           echo "PASSWORD = '${{ secrets.PASSWORD }}'" >> constants.py
           echo "MOBILE = '${{ secrets.MOBILE }}'" >> constants.py
-          echo "NAUKRI_LOGIN_URL = 'https://www.naukri.com/nlogin/login'" >> constants.py
-          echo "NAUKRI_PROFILE_URL = 'https://www.naukri.com/mnjuser/profile'" >> constants.py
-          python naukri.py
+
+      - name: Run script with headless display
+        run: |
+          chmod +x naukri.py
+          xvfb-run python naukri.py
