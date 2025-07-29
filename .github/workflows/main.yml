@@ -35,8 +35,8 @@ jobs:
           PASSWORD: ${{ secrets.PASSWORD }}
           MOBILE: ${{ secrets.MOBILE }}
         run: |
-          echo "ORIGINAL_RESUME_PATH = 'resume.pdf'" > constants.py
-          echo "MODIFIED_RESUME_PATH = 'resume_updated.pdf'" >> constants.py
+          echo "ORIGINAL_RESUME_PATH = 'Aadish_SDE2_Backend_2025.pdf'" > constants.py
+          echo "MODIFIED_RESUME_PATH = 'Aadish_SDE2_Backend_2025.pdf'" >> constants.py
           echo "USERNAME = '${{ secrets.EMAIL }}'" >> constants.py
           echo "PASSWORD = '${{ secrets.PASSWORD }}'" >> constants.py
           echo "MOBILE = '${{ secrets.MOBILE }}'" >> constants.py
