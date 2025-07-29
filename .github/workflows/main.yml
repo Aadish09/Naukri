@@ -18,15 +18,19 @@ jobs:
         with:
           python-version: '3.10'
 
-      - name: Install Chrome and dependencies
+      - name: Install Chrome v138 and dependencies
         run: |
           sudo apt-get update
           sudo apt-get install -y wget unzip xvfb libxi6 libnss3 libxss1 libatk-bridge2.0-0 libgtk-3-0 libgbm-dev
-          wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
-          sudo dpkg -i google-chrome-stable_current_amd64.deb || sudo apt-get -f install -y
-          wget -N https://chromedriver.storage.googleapis.com/$(curl -sS https://chromedriver.storage.googleapis.com/LATEST_RELEASE)/chromedriver_linux64.zip
-          unzip chromedriver_linux64.zip
-          sudo mv -f chromedriver /usr/local/bin/chromedriver
+          
+          wget https://storage.googleapis.com/chrome-for-testing-public/138.0.7204.168/linux64/chrome-linux64.zip
+          unzip chrome-linux64.zip
+          sudo mv chrome-linux64 /opt/chrome
+          sudo ln -sf /opt/chrome/chrome /usr/bin/google-chrome
+
+          wget https://storage.googleapis.com/chrome-for-testing-public/138.0.7204.168/linux64/chromedriver-linux64.zip
+          unzip chromedriver-linux64.zip
+          sudo mv chromedriver-linux64/chromedriver /usr/local/bin/chromedriver
           sudo chmod +x /usr/local/bin/chromedriver
 
       - name: Install Python dependencies
@@ -41,7 +45,6 @@ jobs:
           echo "MODIFIED_RESUME_PATH = 'Aadish_SDE2_Backend_2025.pdf'" >> constants.py
           echo "NAUKRI_LOGIN_URL = 'https://www.naukri.com/nlogin/login'" >> constants.py
           echo "NAUKRI_PROFILE_URL = 'https://www.naukri.com/mnjuser/profile'" >> constants.py
-
 
       - name: Run script
         run: xvfb-run python naukri.py
