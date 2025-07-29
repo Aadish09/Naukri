@@ -162,6 +162,7 @@ def LoadNaukri(headless):
     options.add_argument("--start-maximized")  # ("--kiosk") for MAC
     options.add_argument("--disable-popups")
     options.add_argument("--disable-gpu")
+    options.add_argument("--user-data-dir=/tmp/chrome-profile")
     if headless:
         options.add_argument("--disable-dev-shm-usage")
         options.add_argument("headless")
